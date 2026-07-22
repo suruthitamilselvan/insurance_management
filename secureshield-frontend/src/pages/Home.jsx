@@ -17,6 +17,7 @@ import {
   Award,
   Video,
   ChevronRight,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 
