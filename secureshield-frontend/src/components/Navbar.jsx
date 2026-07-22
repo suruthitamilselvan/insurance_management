@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShieldCheck, LogOut, Users, FileText, FileSpreadsheet, CreditCard, BarChart3, UserCheck, Shield } from "lucide-react";
+import { ShieldCheck, LogOut, Users, FileText, FileSpreadsheet, CreditCard, BarChart3, UserCheck, Shield, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Navbar() {
@@ -72,6 +72,9 @@ export default function Navbar() {
                     <BarChart3 size={15} /> Reports
                   </Link>
                 )}
+                <Link to="/profile" className={navLinkClass("/profile")}>
+                  <User size={15} /> Profile
+                </Link>
                 {user.role === "CUSTOMER" && (
                   <>
                     <Link to="/my-policies" className={navLinkClass("/my-policies")}>

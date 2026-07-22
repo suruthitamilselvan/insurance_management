@@ -9,6 +9,7 @@ import Policies from "./pages/Policies.jsx";
 import Claims from "./pages/Claims.jsx";
 import Premiums from "./pages/Premiums.jsx";
 import Reports from "./pages/Reports.jsx";
+import Profile from "./pages/Profile.jsx";
 import MyPolicies from "./pages/MyPolicies.jsx";
 import MyClaims from "./pages/MyClaims.jsx";
 
@@ -19,6 +20,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         <Route path="/customers" element={<ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}><Customers /></ProtectedRoute>} />
         <Route path="/policies" element={<ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}><Policies /></ProtectedRoute>} />
