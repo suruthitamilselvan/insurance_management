@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FilePlus2, Filter, RefreshCw, XCircle, ShieldCheck, AlertCircle, Calendar, DollarSign, UserCheck } from "lucide-react";
+import { FilePlus2, Filter, RefreshCw, XCircle, ShieldCheck, AlertCircle, Calendar, DollarSign, Download, Search, X, FileText } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 import api from "../api/client";
 
@@ -11,6 +11,12 @@ export default function Policies() {
   const [expiringSoonFilter, setExpiringSoonFilter] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+
+  // Instructor Demo Modals
+  const [showExpiryModal, setShowExpiryModal] = useState(false);
+  const [showUpcomingModal, setShowUpcomingModal] = useState(false);
+  const [upcomingTab, setUpcomingTab] = useState(30); // 7, 15, 30 days
+  const [modalSearch, setModalSearch] = useState("");
 
   const [form, setForm] = useState({
     customerId: "",
@@ -90,6 +96,21 @@ export default function Policies() {
     }
   }
 
+  async function downloadReport(reportType) {
+    try {
+      const res = await api.get("/reports/export/pdf", { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${reportType}-Report-${new Date().toISOString().slice(0, 10)}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      alert("Failed to download report");
+    }
+  }
+
   const statusBadge = (status) => {
     switch (status) {
       case "ACTIVE":
@@ -103,6 +124,13 @@ export default function Policies() {
     }
   };
 
+  // Filtered lists for instructor demo modals
+  const expiredAndExpiringPolicies = policies.filter((p) => {
+    const matchesSearch = p.customer?.name?.toLowerCase().includes(modalSearch.toLowerCase()) || p.policyNumber?.toLowerCase().includes(modalSearch.toLowerCase());
+    const isExp = p.status === "EXPIRED" || new Date(p.endDate) <= new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    return matchesSearch && isExp;
+  });
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Header */}
@@ -112,16 +140,30 @@ export default function Policies() {
             <ShieldCheck className="text-brand-400" /> Insurance Policy Management
           </h1>
           <p className="text-xs sm:text-sm text-slate-400">
-            Issue policies, track expiration dates, process renewals, and handle cancellations.
+            Issue policies, track expiration dates, process renewals, and generate report downloads.
           </p>
         </div>
         {isStaff && (
-          <button
-            onClick={() => setShowForm((s) => !s)}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-500 hover:to-sky-400 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/20 transition-all glow-btn"
-          >
-            <FilePlus2 size={16} /> {showForm ? "Cancel Creation" : "Issue New Policy"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowUpcomingModal(true)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+            >
+              <Calendar size={14} className="text-brand-400" /> Upcoming Renewals
+            </button>
+            <button
+              onClick={() => setShowExpiryModal(true)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+            >
+              <AlertCircle size={14} className="text-orange-400" /> Policy Expiry Report
+            </button>
+            <button
+              onClick={() => setShowForm((s) => !s)}
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-500 hover:to-sky-400 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/20 transition-all glow-btn"
+            >
+              <FilePlus2 size={16} /> {showForm ? "Cancel Creation" : "Issue New Policy"}
+            </button>
+          </div>
         )}
       </div>
 
@@ -257,7 +299,7 @@ export default function Policies() {
         </div>
       )}
 
-      {/* Policies Table */}
+      {/* Main Policies Table */}
       <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
@@ -329,6 +371,180 @@ export default function Policies() {
           </table>
         </div>
       </div>
+
+      {/* INSTRUCTOR DEMO MODAL 1: Policy Expiry Report (Screenshot 4) */}
+      {showExpiryModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass-card max-w-4xl w-full rounded-2xl p-6 border border-slate-700 space-y-4 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowExpiryModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Modal Title & Download Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+              <div>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <AlertCircle className="text-orange-400" /> Policy Expiry Report
+                </h3>
+                <p className="text-xs text-slate-400">List of all expired (and expiring soon) policies of your clients</p>
+              </div>
+
+              {/* Blue Download Button matching screenshot */}
+              <button
+                onClick={() => downloadReport("Policy-Expiry")}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-500/20 transition-all self-start sm:self-auto"
+              >
+                <Download size={14} /> Download Report
+              </button>
+            </div>
+
+            {/* Modal Search Bar */}
+            <div className="relative max-w-sm">
+              <Search size={14} className="absolute left-3 top-2.5 text-slate-400" />
+              <input
+                placeholder="Search by client or policy number..."
+                value={modalSearch}
+                onChange={(e) => setModalSearch(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white"
+              />
+            </div>
+
+            {/* Expiry Report Table */}
+            <div className="overflow-x-auto border border-slate-800 rounded-xl">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-900 text-slate-400 font-semibold border-b border-slate-800 uppercase text-[10px]">
+                  <tr>
+                    <th className="p-3">Client Code</th>
+                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Policy ID</th>
+                    <th className="p-3">Policy Type</th>
+                    <th className="p-3">Amount</th>
+                    <th className="p-3">Start Date</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3">Expiry Date</th>
+                    <th className="p-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-slate-200">
+                  {expiredAndExpiringPolicies.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} className="p-6 text-center text-slate-400">No expired or expiring policies found.</td>
+                    </tr>
+                  ) : (
+                    expiredAndExpiringPolicies.map((p) => (
+                      <tr key={p.id} className="hover:bg-slate-800/40">
+                        <td className="p-3 font-mono text-slate-400">CUST-{p.customerId}</td>
+                        <td className="p-3 font-bold text-white">{p.customer?.name}</td>
+                        <td className="p-3 font-mono text-brand-300">{p.policyNumber}</td>
+                        <td className="p-3">{p.policyType}</td>
+                        <td className="p-3 font-semibold text-emerald-400">${p.premiumAmount}</td>
+                        <td className="p-3 text-slate-400">{new Date(p.startDate).toLocaleDateString()}</td>
+                        <td className="p-3">{statusBadge(p.status)}</td>
+                        <td className="p-3 font-bold text-amber-300">{new Date(p.endDate).toLocaleDateString()}</td>
+                        <td className="p-3 text-right">
+                          <button
+                            onClick={() => { setShowExpiryModal(false); renew(p.id); }}
+                            className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold"
+                          >
+                            Renew
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* INSTRUCTOR DEMO MODAL 2: Upcoming Renewals / SIPs (Screenshot 3) */}
+      {showUpcomingModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass-card max-w-4xl w-full rounded-2xl p-6 border border-slate-700 space-y-4 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowUpcomingModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Header with Title & Download */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+              <div>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Calendar className="text-brand-400" /> Upcoming Policy Renewals
+                </h3>
+                <p className="text-xs text-slate-400">Policies due for renewal in the upcoming timeframe</p>
+              </div>
+
+              {/* Blue Download Button matching screenshot */}
+              <button
+                onClick={() => downloadReport("Upcoming-Renewals")}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-500/20 transition-all self-start sm:self-auto"
+              >
+                <Download size={14} /> Download
+              </button>
+            </div>
+
+            {/* Tab Filter: In next 7 days / In next 15 days / In next 30 days (Screenshot 3) */}
+            <div className="flex items-center gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800 max-w-md">
+              <button
+                onClick={() => setUpcomingTab(7)}
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${upcomingTab === 7 ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
+              >
+                In next 7 days
+              </button>
+              <button
+                onClick={() => setUpcomingTab(15)}
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${upcomingTab === 15 ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
+              >
+                In next 15 days
+              </button>
+              <button
+                onClick={() => setUpcomingTab(30)}
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${upcomingTab === 30 ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
+              >
+                In next 30 days
+              </button>
+            </div>
+
+            {/* Upcoming Table */}
+            <div className="overflow-x-auto border border-slate-800 rounded-xl">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-900 text-slate-400 font-semibold border-b border-slate-800 uppercase text-[10px]">
+                  <tr>
+                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Policy ID</th>
+                    <th className="p-3">Policy Type</th>
+                    <th className="p-3">Amount</th>
+                    <th className="p-3">Next Due Date</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-slate-200">
+                  {policies.slice(0, 8).map((p) => (
+                    <tr key={p.id} className="hover:bg-slate-800/40">
+                      <td className="p-3 font-bold text-white">{p.customer?.name}</td>
+                      <td className="p-3 font-mono text-brand-300">{p.policyNumber}</td>
+                      <td className="p-3">{p.policyType}</td>
+                      <td className="p-3 font-semibold text-emerald-400">${p.premiumAmount}</td>
+                      <td className="p-3 text-slate-300">{new Date(p.endDate).toLocaleDateString()}</td>
+                      <td className="p-3">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold uppercase">Approved</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
