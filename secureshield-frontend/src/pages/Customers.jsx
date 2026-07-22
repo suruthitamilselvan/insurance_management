@@ -75,6 +75,21 @@ export default function Customers() {
     }
   }
 
+  async function downloadDoc(docId, fileName) {
+    try {
+      const res = await api.get(`/documents/${docId}/download`, { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      alert("Failed to download document");
+    }
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Header */}
@@ -316,14 +331,12 @@ export default function Customers() {
                   {customerDocs.map((doc) => (
                     <div key={doc.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
                       <span className="text-slate-200 font-medium truncate max-w-xs">{doc.fileName}</span>
-                      <a
-                        href={`http://localhost:5000/api/documents/${doc.id}/download`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-2.5 py-1 rounded bg-brand-600 hover:bg-brand-500 text-white font-semibold text-[11px]"
+                      <button
+                        onClick={() => downloadDoc(doc.id, doc.fileName)}
+                        className="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-bold text-[11px] shadow-sm transition-all"
                       >
                         Download
-                      </a>
+                      </button>
                     </div>
                   ))}
                 </div>
