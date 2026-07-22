@@ -28,7 +28,9 @@ export default function Login() {
         navigate("/");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid email or password");
+      console.error("Login attempt failed:", err);
+      const serverMessage = err.response?.data?.message || err.response?.data?.details || err.message;
+      setError(serverMessage ? `Error: ${serverMessage}` : "Invalid email or password");
     } finally {
       setLoading(false);
     }
