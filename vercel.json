@@ -3,6 +3,10 @@
   "outputDirectory": "secureshield-frontend/dist",
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://insurance-management-78ha.onrender.com/api/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
