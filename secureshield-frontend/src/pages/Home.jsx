@@ -7,15 +7,16 @@ import {
   CreditCard,
   BarChart3,
   ShieldCheck,
-  ArrowRight,
   TrendingUp,
   Share2,
   Calendar,
   Sparkles,
-  Search,
-  Bell,
   Megaphone,
-  BookOpen,
+  PlayCircle,
+  ExternalLink,
+  Award,
+  Video,
+  ChevronRight,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -59,11 +60,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Grid: Left Goal & Breakdown + Right Announcements & Birthdays (Matching Screenshots 1 & 3) */}
+      {/* Main Grid: Left Performance Goal + Right Professional Ad Banners (Matching Screenshots 1 & 3) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column (8 cols): Track Goal & Breakdown Bar */}
-        <div className="lg:col-span-8 space-y-6">
-          {/* Goal Growth Widget (Matching Screenshot 1 & 3) */}
+        {/* Left Column (7 cols): Goal & Breakdown */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* Goal Growth Widget */}
           <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
               <div>
@@ -81,7 +82,7 @@ export default function Home() {
 
             {/* Goal Progress Bar */}
             <div className="space-y-1.5">
-              <div className="w-full h-3 rounded-full bg-slate-900 overflow-hidden border border-slate-800 p-0.5">
+              <div className="w-full h-3.5 rounded-full bg-slate-900 overflow-hidden border border-slate-800 p-0.5">
                 <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 w-[88.8%] shadow-lg shadow-emerald-500/20" />
               </div>
               <div className="flex justify-between text-[11px] text-slate-400 font-mono">
@@ -92,7 +93,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Policy Category Breakdown Bar (Matching Screenshot 1 & 3) */}
+          {/* Policy Portfolio Breakdown Bar */}
           <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white">Policy Portfolio Breakdown</h3>
@@ -129,32 +130,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Column (4 cols): Announcements + Upcoming Birthdays (Matching Screenshots 1 & 3) */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Announcements Banner Card (Matching Screenshot 1 & 3) */}
-          <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                <Megaphone size={16} className="text-brand-400" /> Announcements & Guides
-              </h3>
-            </div>
-
-            <div className="rounded-xl overflow-hidden bg-gradient-to-br from-brand-950/80 to-slate-900 p-4 border border-brand-500/20 space-y-2">
-              <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-brand-500/20 text-brand-300 border border-brand-500/30">
-                Episode 18 • Monthly Guide
-              </span>
-              <h4 className="text-xs font-bold text-white leading-snug">
-                How Health & Auto Policy Renewals Drive Multi-Bagger Wealth
-              </h4>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Explore recommended policy schemes of the quarter curated by SecureShield expert research team.
-              </p>
-            </div>
-          </div>
-
-          {/* Upcoming Birthdays / Expiries Mini Widget (Matching Screenshot 1 & 3) */}
+          {/* Upcoming Birthdays / Expiries Mini Widget */}
           <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
@@ -168,6 +145,104 @@ export default function Home() {
               <BirthdayRow name="VINOD JUGRAJ JAIN" date="23 July" id="1456760" />
               <BirthdayRow name="SHUBHAM SHANTILAL KOTHARI" date="26 July" id="1239560" />
             </div>
+          </div>
+        </div>
+
+        {/* Right Column (5 cols): Professional Announcement Ad Banners (Matching Screenshots 1 & 3) */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <Megaphone size={16} className="text-brand-400" /> Announcements & Video Banners
+            </h3>
+            <span className="text-[10px] bg-brand-500/20 text-brand-300 font-bold px-2 py-0.5 rounded border border-brand-500/30">
+              Sponsored Banners
+            </span>
+          </div>
+
+          {/* PROMOTIONAL AD BANNER 1: Episode 18 Video Banner (Matching Screenshot 1 & 3) */}
+          <div className="group relative rounded-2xl overflow-hidden border border-blue-500/40 bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 shadow-xl shadow-blue-500/10 p-5 space-y-3 transition-all hover:border-blue-400">
+            {/* Top Badge */}
+            <div className="flex items-center justify-between">
+              <span className="px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase tracking-wider border border-blue-500/40 flex items-center gap-1">
+                <Video size={12} /> EPISODE 18 • WEALTH MASTERCLASS
+              </span>
+              <span className="text-[10px] text-slate-400 font-bold">JULY 2026</span>
+            </div>
+
+            {/* Banner Graphic Headline */}
+            <div className="relative z-10 space-y-1.5 pt-1">
+              <h4 className="text-base font-extrabold text-white leading-tight tracking-tight uppercase group-hover:text-sky-300 transition-colors">
+                CAN MUTUAL FUNDS & INSURANCE CREATE MULTIBAGGER WEALTH?
+              </h4>
+              <p className="text-xs text-slate-300 leading-snug">
+                Join certified advisor Viral Jain as he breaks down high-yield insurance strategies for 2026.
+              </p>
+            </div>
+
+            {/* Play Button CTA */}
+            <div className="flex items-center justify-between pt-2 border-t border-blue-900/60">
+              <div className="flex items-center gap-2 text-xs font-bold text-sky-400">
+                <PlayCircle size={20} className="text-sky-400 fill-sky-400/20 animate-pulse" /> Watch Session Recording
+              </div>
+              <span className="text-[10px] text-slate-400 group-hover:translate-x-1 transition-transform">
+                Watch Now →
+              </span>
+            </div>
+
+            {/* Decorative background glow */}
+            <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all" />
+          </div>
+
+          {/* PROMOTIONAL AD BANNER 2: Monthly Guide & Markets Report (Matching Screenshot 1 & 3) */}
+          <div className="group relative rounded-2xl overflow-hidden border border-teal-500/40 bg-gradient-to-br from-teal-950 via-slate-900 to-emerald-950 shadow-xl p-5 space-y-3 transition-all hover:border-teal-400">
+            <div className="flex items-center justify-between">
+              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-500/40 flex items-center gap-1">
+                <BookOpen size={12} /> SECURESHIELD BD REPORT
+              </span>
+              <span className="text-[10px] text-emerald-400 font-bold">FREE PDF</span>
+            </div>
+
+            <div className="space-y-1.5">
+              <h4 className="text-sm font-extrabold text-white leading-tight uppercase group-hover:text-emerald-300 transition-colors">
+                Monthly Guide to Insurance Markets & Investment Strategy — July Edition
+              </h4>
+              <p className="text-xs text-slate-300">
+                Download the official 24-page report on claim settlement ratios and premium growth trends.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-teal-900/60">
+              <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                <Award size={14} /> Download Strategy PDF
+              </span>
+              <ChevronRight size={16} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* PROMOTIONAL AD BANNER 3: Live Webinar Event (Matching Screenshot 1 & 3) */}
+          <div className="group relative rounded-2xl overflow-hidden border border-purple-500/40 bg-gradient-to-br from-purple-950 via-slate-900 to-pink-950 shadow-xl p-5 space-y-3 transition-all hover:border-purple-400">
+            <div className="flex items-center justify-between">
+              <span className="px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-black uppercase tracking-wider border border-purple-500/40">
+                COMMUNITY EVENT
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono">SATURDAY 11:48 AM</span>
+            </div>
+
+            <div className="space-y-1">
+              <h4 className="text-sm font-extrabold text-white leading-tight">
+                SecureShield BD scheduled a new live stage event
+              </h4>
+              <p className="text-xs text-slate-300">
+                Web Development Project Allocation & Final Portfolio Review with instructor Om Zalavediya.
+              </p>
+            </div>
+
+            <button
+              onClick={() => alert("Joining live webinar stage...")}
+              className="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-md shadow-purple-500/20 flex items-center justify-center gap-1.5 transition-all"
+            >
+              <ExternalLink size={14} /> Join Stage Webinar Now
+            </button>
           </div>
         </div>
       </div>
