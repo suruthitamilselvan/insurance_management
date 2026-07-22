@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd secureshield-frontend && npm install && npm run build",
+  "outputDirectory": "secureshield-frontend/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
