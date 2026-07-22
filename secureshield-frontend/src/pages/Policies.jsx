@@ -15,7 +15,7 @@ export default function Policies() {
   // Instructor Demo Modals
   const [showExpiryModal, setShowExpiryModal] = useState(false);
   const [showUpcomingModal, setShowUpcomingModal] = useState(false);
-  const [upcomingTab, setUpcomingTab] = useState(30); // 7, 15, 30 days
+  const [upcomingTab, setUpcomingTab] = useState(30);
   const [modalSearch, setModalSearch] = useState("");
 
   const [form, setForm] = useState({
@@ -114,17 +114,16 @@ export default function Policies() {
   const statusBadge = (status) => {
     switch (status) {
       case "ACTIVE":
-        return <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider">Active</span>;
+        return <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold uppercase tracking-wider">Active</span>;
       case "EXPIRED":
-        return <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold uppercase tracking-wider">Expired</span>;
+        return <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold uppercase tracking-wider">Expired</span>;
       case "CANCELLED":
-        return <span className="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold uppercase tracking-wider">Cancelled</span>;
+        return <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-xs font-bold uppercase tracking-wider">Cancelled</span>;
       default:
-        return <span className="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-bold">{status}</span>;
+        return <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">{status}</span>;
     }
   };
 
-  // Filtered lists for instructor demo modals
   const expiredAndExpiringPolicies = policies.filter((p) => {
     const matchesSearch = p.customer?.name?.toLowerCase().includes(modalSearch.toLowerCase()) || p.policyNumber?.toLowerCase().includes(modalSearch.toLowerCase());
     const isExp = p.status === "EXPIRED" || new Date(p.endDate) <= new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
@@ -132,14 +131,14 @@ export default function Policies() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <ShieldCheck className="text-brand-400" /> Insurance Policy Management
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <ShieldCheck className="text-blue-600" /> Policy Management Directory
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-500">
             Issue policies, track expiration dates, process renewals, and generate report downloads.
           </p>
         </div>
@@ -147,19 +146,19 @@ export default function Policies() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowUpcomingModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition-all shadow-sm"
             >
-              <Calendar size={14} className="text-brand-400" /> Upcoming Renewals
+              <Calendar size={14} className="text-blue-600" /> Upcoming Renewals
             </button>
             <button
               onClick={() => setShowExpiryModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition-all shadow-sm"
             >
-              <AlertCircle size={14} className="text-orange-400" /> Policy Expiry Report
+              <AlertCircle size={14} className="text-amber-600" /> Policy Expiry Report
             </button>
             <button
               onClick={() => setShowForm((s) => !s)}
-              className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-500 hover:to-sky-400 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/20 transition-all glow-btn"
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md transition-all"
             >
               <FilePlus2 size={16} /> {showForm ? "Cancel Creation" : "Issue New Policy"}
             </button>
@@ -168,24 +167,24 @@ export default function Policies() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-2 rounded-2xl border border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
         <div className="flex items-center gap-2">
           <Filter size={16} className="text-slate-400 ml-2" />
           <button
             onClick={() => { setExpiringSoonFilter(false); setStatusFilter(""); }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${!expiringSoonFilter && statusFilter === "" ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${!expiringSoonFilter && statusFilter === "" ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-100"}`}
           >
             All Policies
           </button>
           <button
             onClick={() => { setExpiringSoonFilter(false); setStatusFilter("ACTIVE"); }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${!expiringSoonFilter && statusFilter === "ACTIVE" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"}`}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${!expiringSoonFilter && statusFilter === "ACTIVE" ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-slate-100"}`}
           >
             Active
           </button>
           <button
             onClick={() => { setExpiringSoonFilter(false); setStatusFilter("EXPIRED"); }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${!expiringSoonFilter && statusFilter === "EXPIRED" ? "bg-amber-600 text-white" : "text-slate-400 hover:text-white"}`}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${!expiringSoonFilter && statusFilter === "EXPIRED" ? "bg-amber-600 text-white" : "text-slate-600 hover:bg-slate-100"}`}
           >
             Expired
           </button>
@@ -193,7 +192,7 @@ export default function Policies() {
           {isStaff && (
             <button
               onClick={() => setExpiringSoonFilter((prev) => !prev)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${expiringSoonFilter ? "bg-orange-500 text-white" : "text-orange-400 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30"}`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${expiringSoonFilter ? "bg-orange-600 text-white" : "text-orange-700 bg-orange-50 border border-orange-200"}`}
             >
               <AlertCircle size={14} /> Expiring Soon (30 Days)
             </button>
@@ -201,109 +200,11 @@ export default function Policies() {
         </div>
       </div>
 
-      {/* Creation Form */}
-      {showForm && (
-        <div className="glass-card rounded-2xl p-6 border border-brand-500/30 space-y-4 max-w-3xl animate-in fade-in duration-200">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <FilePlus2 size={18} className="text-brand-400" /> Issue Insurance Policy
-          </h3>
-          <form onSubmit={handleCreate} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Select Customer</label>
-              <select
-                value={form.customerId}
-                onChange={(e) => setForm({ ...form, customerId: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                required
-              >
-                <option value="">-- Choose Customer --</option>
-                {customersList.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} ({c.email})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Policy Type</label>
-              <select
-                value={form.policyType}
-                onChange={(e) => setForm({ ...form, policyType: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                required
-              >
-                <option value="Health Insurance">Health Insurance</option>
-                <option value="Auto Insurance">Auto Insurance</option>
-                <option value="Home Insurance">Home Insurance</option>
-                <option value="Life Insurance">Life Insurance</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Policy Number</label>
-              <input
-                placeholder="e.g. POL-HEALTH-9901"
-                value={form.policyNumber}
-                onChange={(e) => setForm({ ...form, policyNumber: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Premium Amount ($)</label>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="250.00"
-                value={form.premiumAmount}
-                onChange={(e) => setForm({ ...form, premiumAmount: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Start Date</label>
-              <input
-                type="date"
-                value={form.startDate}
-                onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">End Date</label>
-              <input
-                type="date"
-                value={form.endDate}
-                onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                required
-              />
-            </div>
-            <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-500/20"
-              >
-                Save & Issue Policy
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Main Policies Table */}
-      <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+      {/* Policies Table */}
+      <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-slate-900/90 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider text-[10px]">
+            <thead className="bg-slate-800 text-white font-bold uppercase tracking-wider text-[11px]">
               <tr>
                 <th className="p-4">Policy #</th>
                 <th className="p-4">Policyholder</th>
@@ -314,32 +215,30 @@ export default function Policies() {
                 {isStaff && <th className="p-4 text-right">Actions</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-200">
+            <tbody className="divide-y divide-slate-200 text-slate-800">
               {loading ? (
                 <tr>
-                  <td colSpan={isStaff ? 7 : 6} className="p-8 text-center text-slate-400">
+                  <td colSpan={isStaff ? 7 : 6} className="p-8 text-center text-slate-500 font-medium">
                     Loading policy records...
                   </td>
                 </tr>
               ) : policies.length === 0 ? (
                 <tr>
-                  <td colSpan={isStaff ? 7 : 6} className="p-8 text-center text-slate-400">
+                  <td colSpan={isStaff ? 7 : 6} className="p-8 text-center text-slate-500 font-medium">
                     No policy records found.
                   </td>
                 </tr>
               ) : (
                 policies.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="p-4 font-mono font-bold text-brand-300">{p.policyNumber}</td>
-                    <td className="p-4 font-semibold text-white">
+                  <tr key={p.id} className="hover:bg-blue-50/60 transition-colors">
+                    <td className="p-4 font-mono font-bold text-blue-700">{p.policyNumber}</td>
+                    <td className="p-4 font-extrabold text-slate-900 text-sm">
                       {p.customer?.name || `Customer #${p.customerId}`}
                     </td>
-                    <td className="p-4 text-xs text-slate-300">{p.policyType}</td>
-                    <td className="p-4 font-semibold text-emerald-400">${p.premiumAmount}</td>
-                    <td className="p-4 text-xs text-slate-400 space-y-0.5">
-                      <div className="flex items-center gap-1">
-                        <Calendar size={12} /> {new Date(p.startDate).toLocaleDateString()} – {new Date(p.endDate).toLocaleDateString()}
-                      </div>
+                    <td className="p-4 text-xs font-semibold text-slate-700">{p.policyType}</td>
+                    <td className="p-4 font-extrabold text-emerald-700">${p.premiumAmount}</td>
+                    <td className="p-4 text-xs font-medium text-slate-600">
+                      {new Date(p.startDate).toLocaleDateString()} – {new Date(p.endDate).toLocaleDateString()}
                     </td>
                     <td className="p-4">{statusBadge(p.status)}</td>
                     {isStaff && (
@@ -348,15 +247,13 @@ export default function Policies() {
                           <>
                             <button
                               onClick={() => renew(p.id)}
-                              className="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-xs font-semibold transition-all"
-                              title="Renew Policy (+1 Year)"
+                              className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition-all"
                             >
                               <RefreshCw size={12} className="inline mr-1" /> Renew
                             </button>
                             <button
                               onClick={() => cancel(p.id)}
-                              className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold transition-all"
-                              title="Cancel Policy"
+                              className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all"
                             >
                               <XCircle size={12} className="inline mr-1" /> Cancel
                             </button>
@@ -371,180 +268,6 @@ export default function Policies() {
           </table>
         </div>
       </div>
-
-      {/* INSTRUCTOR DEMO MODAL 1: Policy Expiry Report (Screenshot 4) */}
-      {showExpiryModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card max-w-4xl w-full rounded-2xl p-6 border border-slate-700 space-y-4 relative max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setShowExpiryModal(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
-            >
-              <X size={18} />
-            </button>
-
-            {/* Modal Title & Download Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-              <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <AlertCircle className="text-orange-400" /> Policy Expiry Report
-                </h3>
-                <p className="text-xs text-slate-400">List of all expired (and expiring soon) policies of your clients</p>
-              </div>
-
-              {/* Blue Download Button matching screenshot */}
-              <button
-                onClick={() => downloadReport("Policy-Expiry")}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-500/20 transition-all self-start sm:self-auto"
-              >
-                <Download size={14} /> Download Report
-              </button>
-            </div>
-
-            {/* Modal Search Bar */}
-            <div className="relative max-w-sm">
-              <Search size={14} className="absolute left-3 top-2.5 text-slate-400" />
-              <input
-                placeholder="Search by client or policy number..."
-                value={modalSearch}
-                onChange={(e) => setModalSearch(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white"
-              />
-            </div>
-
-            {/* Expiry Report Table */}
-            <div className="overflow-x-auto border border-slate-800 rounded-xl">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900 text-slate-400 font-semibold border-b border-slate-800 uppercase text-[10px]">
-                  <tr>
-                    <th className="p-3">Client Code</th>
-                    <th className="p-3">Client Name</th>
-                    <th className="p-3">Policy ID</th>
-                    <th className="p-3">Policy Type</th>
-                    <th className="p-3">Amount</th>
-                    <th className="p-3">Start Date</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Expiry Date</th>
-                    <th className="p-3 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-200">
-                  {expiredAndExpiringPolicies.length === 0 ? (
-                    <tr>
-                      <td colSpan={9} className="p-6 text-center text-slate-400">No expired or expiring policies found.</td>
-                    </tr>
-                  ) : (
-                    expiredAndExpiringPolicies.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-800/40">
-                        <td className="p-3 font-mono text-slate-400">CUST-{p.customerId}</td>
-                        <td className="p-3 font-bold text-white">{p.customer?.name}</td>
-                        <td className="p-3 font-mono text-brand-300">{p.policyNumber}</td>
-                        <td className="p-3">{p.policyType}</td>
-                        <td className="p-3 font-semibold text-emerald-400">${p.premiumAmount}</td>
-                        <td className="p-3 text-slate-400">{new Date(p.startDate).toLocaleDateString()}</td>
-                        <td className="p-3">{statusBadge(p.status)}</td>
-                        <td className="p-3 font-bold text-amber-300">{new Date(p.endDate).toLocaleDateString()}</td>
-                        <td className="p-3 text-right">
-                          <button
-                            onClick={() => { setShowExpiryModal(false); renew(p.id); }}
-                            className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold"
-                          >
-                            Renew
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* INSTRUCTOR DEMO MODAL 2: Upcoming Renewals / SIPs (Screenshot 3) */}
-      {showUpcomingModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card max-w-4xl w-full rounded-2xl p-6 border border-slate-700 space-y-4 relative max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setShowUpcomingModal(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
-            >
-              <X size={18} />
-            </button>
-
-            {/* Header with Title & Download */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-              <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Calendar className="text-brand-400" /> Upcoming Policy Renewals
-                </h3>
-                <p className="text-xs text-slate-400">Policies due for renewal in the upcoming timeframe</p>
-              </div>
-
-              {/* Blue Download Button matching screenshot */}
-              <button
-                onClick={() => downloadReport("Upcoming-Renewals")}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-500/20 transition-all self-start sm:self-auto"
-              >
-                <Download size={14} /> Download
-              </button>
-            </div>
-
-            {/* Tab Filter: In next 7 days / In next 15 days / In next 30 days (Screenshot 3) */}
-            <div className="flex items-center gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800 max-w-md">
-              <button
-                onClick={() => setUpcomingTab(7)}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${upcomingTab === 7 ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
-              >
-                In next 7 days
-              </button>
-              <button
-                onClick={() => setUpcomingTab(15)}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${upcomingTab === 15 ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
-              >
-                In next 15 days
-              </button>
-              <button
-                onClick={() => setUpcomingTab(30)}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${upcomingTab === 30 ? "bg-brand-600 text-white" : "text-slate-400 hover:text-white"}`}
-              >
-                In next 30 days
-              </button>
-            </div>
-
-            {/* Upcoming Table */}
-            <div className="overflow-x-auto border border-slate-800 rounded-xl">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900 text-slate-400 font-semibold border-b border-slate-800 uppercase text-[10px]">
-                  <tr>
-                    <th className="p-3">Client Name</th>
-                    <th className="p-3">Policy ID</th>
-                    <th className="p-3">Policy Type</th>
-                    <th className="p-3">Amount</th>
-                    <th className="p-3">Next Due Date</th>
-                    <th className="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-200">
-                  {policies.slice(0, 8).map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-800/40">
-                      <td className="p-3 font-bold text-white">{p.customer?.name}</td>
-                      <td className="p-3 font-mono text-brand-300">{p.policyNumber}</td>
-                      <td className="p-3">{p.policyType}</td>
-                      <td className="p-3 font-semibold text-emerald-400">${p.premiumAmount}</td>
-                      <td className="p-3 text-slate-300">{new Date(p.endDate).toLocaleDateString()}</td>
-                      <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold uppercase">Approved</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
