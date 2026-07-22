@@ -5,10 +5,11 @@ import prisma from "../utils/prismaClient.js";
 const SALT_ROUNDS = 10;
 
 function issueToken(payload) {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "8h" });
+  const secret = process.env.JWT_SECRET || "secureshield_super_secret_key_2026";
+  return jwt.sign(payload, secret, { expiresIn: "8h" });
 }
 
-// POST /api/auth/register  (creates an Admin or Agent — internal staff account)
+// POST /api/auth/register (creates an Admin or Agent — internal staff account)
 export async function register(req, res) {
   try {
     const { name, email, password, role } = req.body;
@@ -32,12 +33,12 @@ export async function register(req, res) {
 
     res.status(201).json({ id: user.id, name: user.name, email: user.email, role: user.role });
   } catch (err) {
-    console.error(err);
+    console.error("Register error:", err);
     res.status(500).json({ message: "Server error during registration" });
   }
 }
 
-// POST /api/auth/login  (Admin/Agent login)
+// POST /api/auth/login (Admin/Agent login)
 export async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -53,12 +54,12 @@ export async function login(req, res) {
     const token = issueToken({ id: user.id, role: user.role, email: user.email });
     res.json({ token, user: { id: user.id, name: user.name, role: user.role } });
   } catch (err) {
-    console.error(err);
+    console.error("Login error:", err);
     res.status(500).json({ message: "Server error during login" });
   }
 }
 
-// POST /api/auth/customer-login  (Customer login — separate table, per spec)
+// POST /api/auth/customer-login (Customer login)
 export async function customerLogin(req, res) {
   try {
     const { email, password } = req.body;
@@ -74,7 +75,7 @@ export async function customerLogin(req, res) {
     const token = issueToken({ id: customer.id, role: "CUSTOMER", email: customer.email });
     res.json({ token, user: { id: customer.id, name: customer.name, role: "CUSTOMER" } });
   } catch (err) {
-    console.error(err);
+    console.error("Customer login error:", err);
     res.status(500).json({ message: "Server error during login" });
   }
 }

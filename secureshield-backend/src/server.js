@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import bcrypt from "bcryptjs";
+import prisma from "./utils/prismaClient.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
@@ -31,5 +33,36 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong" });
 });
 
+async function ensureSeedData() {
+  try {
+    const adminCount = await prisma.user.count();
+    if (adminCount === 0) {
+      console.log("Database empty. Auto-seeding default accounts...");
+      const adminPass = await bcrypt.hash("Admin@123", 10);
+      const agentPass = await bcrypt.hash("Agent@123", 10);
+      const custPass = await bcrypt.hash("Customer@123", 10);
+
+      await prisma.user.create({ data: { name: "Suruthi", email: "suruthi@secureshield.test", password: adminPass, role: "ADMIN" } });
+      await prisma.user.create({ data: { name: "Gokul", email: "gokul@secureshield.test", password: agentPass, role: "AGENT" } });
+      await prisma.customer.create({
+        data: {
+          name: "Samreena",
+          email: "samreena@example.com",
+          password: custPass,
+          dob: new Date("1995-08-22"),
+          phone: "+1 555-0188",
+          address: "45 Palm Avenue, Grand Boulevard",
+        },
+      });
+      console.log("Auto-seeding complete!");
+    }
+  } catch (err) {
+    console.error("Auto-seed check error:", err);
+  }
+}
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`SecureShield backend running on port ${PORT}`));
+app.listen(PORT, async () => {
+  console.log(`SecureShield backend running on port ${PORT}`);
+  await ensureSeedData();
+});
