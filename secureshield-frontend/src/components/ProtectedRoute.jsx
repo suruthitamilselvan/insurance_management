@@ -5,7 +5,12 @@ import { useAuth } from "../context/AuthContext.jsx";
 export default function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
 
-  if (!user) return <Navigate to="/login" replace />;
+  // If user object is missing or malformed (no role), clear stale cache and redirect to login
+  if (!user || !user.role) {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    return <Navigate to="/login" replace />;
+  }
 
   if (user.role === "CUSTOMER" && (!allowedRoles || !allowedRoles.includes("CUSTOMER"))) {
     return <Navigate to="/my-policies" replace />;
