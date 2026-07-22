@@ -27,10 +27,10 @@ app.use("/api/premiums", premiumRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/reports", reportRoutes);
 
-// Fallback error handler
+// Detailed error handler for diagnostic logging
 app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ message: "Something went wrong" });
+  console.error("API Error:", err);
+  res.status(500).json({ message: err.message || "Something went wrong", details: String(err) });
 });
 
 async function ensureSeedData() {
