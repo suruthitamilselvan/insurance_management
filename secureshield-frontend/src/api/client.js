@@ -1,7 +1,15 @@
 import axios from "axios";
 
+// Construct absolute base URL to prevent 'Failed to construct URL' error in browsers
+const getBaseURL = () => {
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return `${window.location.origin}/api`;
+  }
+  return "https://insurance-management-78ha.onrender.com/api";
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL: getBaseURL(),
 });
 
 // Attach JWT token to every HTTP request
