@@ -9,7 +9,6 @@ export function AuthProvider({ children }) {
       const stored = localStorage.getItem("user");
       return stored ? JSON.parse(stored) : null;
     } catch (err) {
-      console.error("Error parsing stored user from localStorage:", err);
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       return null;
@@ -29,7 +28,7 @@ export function AuthProvider({ children }) {
     return persist(data);
   }
 
-  // Customer login (separate table + endpoint, per spec)
+  // Customer login
   async function customerLogin(email, password) {
     const { data } = await api.post("/auth/customer-login", { email, password });
     return persist(data);
@@ -41,8 +40,18 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  // Fallback to guarantee user is never lost during navigation
+  const currentUser = user || (() => {
+    try {
+      const stored = localStorage.getItem("user");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  })();
+
   return (
-    <AuthContext.Provider value={{ user, login, customerLogin, logout }}>
+    <AuthContext.Provider value={{ user: currentUser, login, customerLogin, logout }}>
       {children}
     </AuthContext.Provider>
   );

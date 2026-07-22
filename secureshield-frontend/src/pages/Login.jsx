@@ -16,12 +16,17 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
+      let loggedUser;
       if (targetMode === "staff") {
-        await login(targetEmail, targetPassword);
+        loggedUser = await login(targetEmail, targetPassword);
       } else {
-        await customerLogin(targetEmail, targetPassword);
+        loggedUser = await customerLogin(targetEmail, targetPassword);
       }
-      navigate("/");
+      if (loggedUser?.role === "CUSTOMER") {
+        navigate("/my-policies");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password");
     } finally {

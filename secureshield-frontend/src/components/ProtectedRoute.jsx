@@ -7,8 +7,12 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
   if (!user) return <Navigate to="/login" replace />;
 
+  if (user.role === "CUSTOMER" && (!allowedRoles || !allowedRoles.includes("CUSTOMER"))) {
+    return <Navigate to="/my-policies" replace />;
+  }
+
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={user.role === "CUSTOMER" ? "/my-policies" : "/"} replace />;
   }
 
   return children;
