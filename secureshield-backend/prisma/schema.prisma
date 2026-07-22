@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Admin / Agent accounts (role: "ADMIN" | "AGENT")
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("AGENT")
+  createdAt DateTime @default(now())
+}
+
+// Customer accounts (separate table + separate login, per spec)
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  dob       DateTime
+  phone     String
+  address   String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  policies  Policy[]
+  documents Document[]
+}
+
+model Policy {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  customer      Customer @relation(fields: [customerId], references: [id])
+  policyType    String
+  policyNumber  String   @unique
+  premiumAmount Float
+  startDate     DateTime
+  endDate       DateTime
+  status        String   @default("ACTIVE") // "ACTIVE" | "EXPIRED" | "CANCELLED"
+  createdAt     DateTime @default(now())
+
+  claims          Claim[]
+  premiumPayments PremiumPayment[]
+}
+
+model Claim {
+  id             Int      @id @default(autoincrement())
+  policyId       Int
+  policy         Policy   @relation(fields: [policyId], references: [id])
+  claimAmount    Float
+  reason         String
+  status         String   @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  submissionDate DateTime @default(now())
+}
+
+model PremiumPayment {
+  id            Int      @id @default(autoincrement())
+  policyId      Int
+  policy        Policy   @relation(fields: [policyId], references: [id])
+  paymentDate   DateTime @default(now())
+  amount        Float
+  paymentStatus String   @default("PENDING") // "PAID" | "PENDING" | "OVERDUE"
+}
+
+model Document {
+  id         Int      @id @default(autoincrement())
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+  fileName   String
+  filePath   String
+  uploadedAt DateTime @default(now())
+}

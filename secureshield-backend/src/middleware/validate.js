@@ -1,0 +1,15 @@
+// Wraps a Zod schema into an Express middleware.
+// Usage: router.post("/", validate(createPolicySchema), handler)
+export function validate(schema) {
+  return (req, res, next) => {
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: result.error.flatten().fieldErrors,
+      });
+    }
+    req.body = result.data;
+    next();
+  };
+}
