@@ -1,6 +1,21 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShieldCheck, LogOut, Users, FileText, FileSpreadsheet, CreditCard, BarChart3, UserCheck, Shield, User } from "lucide-react";
+import {
+  ShieldCheck,
+  LogOut,
+  Users,
+  FileText,
+  FileSpreadsheet,
+  CreditCard,
+  BarChart3,
+  UserCheck,
+  Search,
+  Bell,
+  MessageSquare,
+  Zap,
+  User,
+  ChevronDown,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Navbar() {
@@ -16,103 +31,106 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   const navLinkClass = (path) =>
-    `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all ${
+    `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
       isActive(path)
-        ? "bg-brand-500/20 text-brand-400 border border-brand-500/30 shadow-sm"
-        : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+        ? "bg-white/20 text-white shadow-inner font-bold"
+        : "text-blue-100 hover:text-white hover:bg-white/10"
     }`;
 
-  const roleColor = {
-    ADMIN: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-    AGENT: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-    CUSTOMER: "bg-sky-500/20 text-sky-300 border-sky-500/30",
-  };
-
   return (
-    <header className="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 md:px-8 py-3">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-sky-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <ShieldCheck size={22} className="stroke-[2.5]" />
-          </div>
-          <div>
-            <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-              SecureShield
-            </span>
-            <span className="hidden sm:inline-block ml-2 px-1.5 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded bg-slate-800 text-brand-400 border border-slate-700">
-              Enterprise
-            </span>
-          </div>
-        </Link>
+    <header className="sticky top-0 z-50 bg-[#0f52ba] text-white shadow-md border-b border-blue-700">
+      <div className="max-w-[1400px] mx-auto px-4 py-2 flex items-center justify-between gap-4">
+        {/* Brand Logo + Primary Nav Links (Matching Instructor Screenshot) */}
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2 font-black text-lg tracking-tight text-white">
+            <div className="w-8 h-8 rounded-lg bg-white text-[#0f52ba] flex items-center justify-center font-black text-sm shadow">
+              A
+            </div>
+            <span>AssetPlus <span className="text-blue-200 text-xs font-medium">/ SecureShield</span></span>
+          </Link>
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-2 md:gap-3">
+          {user && (
+            <nav className="hidden md:flex items-center gap-1">
+              <Link to="/" className={navLinkClass("/")}>Home</Link>
+              {(user.role === "ADMIN" || user.role === "AGENT") && (
+                <>
+                  <Link to="/customers" className={navLinkClass("/customers")}>Clients</Link>
+                  <Link to="/policies" className={navLinkClass("/policies")}>Policies</Link>
+                  <Link to="/claims" className={navLinkClass("/claims")}>Claims</Link>
+                  <Link to="/premiums" className={navLinkClass("/premiums")}>Premiums</Link>
+                </>
+              )}
+              {user.role === "ADMIN" && (
+                <Link to="/reports" className={navLinkClass("/reports")}>Reports</Link>
+              )}
+              {user.role === "CUSTOMER" && (
+                <>
+                  <Link to="/my-policies" className={navLinkClass("/my-policies")}>My Policies</Link>
+                  <Link to="/my-claims" className={navLinkClass("/my-claims")}>My Claims</Link>
+                </>
+              )}
+            </nav>
+          )}
+        </div>
+
+        {/* Center Search Input (Matching Instructor Screenshot) */}
+        {user && (
+          <div className="hidden lg:flex flex-1 max-w-md items-center relative">
+            <Search size={14} className="absolute left-3 text-blue-200" />
+            <input
+              placeholder="Search Clients, Products & Resources (Ctrl+K)"
+              className="w-full bg-blue-700/60 border border-blue-500/60 rounded-lg pl-9 pr-4 py-1.5 text-xs text-white placeholder-blue-200 focus:outline-none focus:bg-blue-800"
+            />
+          </div>
+        )}
+
+        {/* Right Status & Notifications (Matching Instructor Screenshot) */}
+        <div className="flex items-center gap-3">
           {user ? (
             <>
-              <div className="flex items-center gap-1.5 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
-                {(user.role === "ADMIN" || user.role === "AGENT") && (
-                  <>
-                    <Link to="/customers" className={navLinkClass("/customers")}>
-                      <Users size={15} /> Customers
-                    </Link>
-                    <Link to="/policies" className={navLinkClass("/policies")}>
-                      <FileText size={15} /> Policies
-                    </Link>
-                    <Link to="/claims" className={navLinkClass("/claims")}>
-                      <FileSpreadsheet size={15} /> Claims
-                    </Link>
-                    <Link to="/premiums" className={navLinkClass("/premiums")}>
-                      <CreditCard size={15} /> Premiums
-                    </Link>
-                  </>
-                )}
-                {user.role === "ADMIN" && (
-                  <Link to="/reports" className={navLinkClass("/reports")}>
-                    <BarChart3 size={15} /> Reports
-                  </Link>
-                )}
-                <Link to="/profile" className={navLinkClass("/profile")}>
-                  <User size={15} /> Profile
+              {/* Notification Badges */}
+              <div className="hidden sm:flex items-center gap-2 text-xs">
+                <span className="flex items-center gap-1 px-2 py-1 rounded bg-blue-700/80 text-blue-100 text-[11px] font-semibold">
+                  <MessageSquare size={12} /> Messages
+                </span>
+                <span className="flex items-center gap-1 px-2 py-1 rounded bg-blue-700/80 text-blue-100 text-[11px] font-semibold">
+                  <Bell size={12} /> Alerts <span className="bg-rose-500 text-white px-1.5 py-0.2 text-[9px] font-bold rounded-full">44</span>
+                </span>
+                <span className="flex items-center gap-1 px-2 py-1 rounded bg-blue-700/80 text-blue-100 text-[11px] font-semibold">
+                  <Zap size={12} /> Triggers <span className="bg-rose-500 text-white px-1.5 py-0.2 text-[9px] font-bold rounded-full">440</span>
+                </span>
+              </div>
+
+              {/* User Profile Button */}
+              <div className="flex items-center gap-2 pl-2 border-l border-blue-600">
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 hover:bg-white/10 p-1.5 rounded-lg transition-colors text-left"
+                >
+                  <div className="w-7 h-7 rounded-full bg-white text-[#0f52ba] flex items-center justify-center font-bold text-xs">
+                    {user.name?.substring(0, 1).toUpperCase()}
+                  </div>
+                  <div className="hidden xl:block">
+                    <p className="text-xs font-bold leading-none">{user.name}</p>
+                    <p className="text-[10px] text-blue-200 leading-none mt-0.5">{user.role}</p>
+                  </div>
                 </Link>
-                {user.role === "CUSTOMER" && (
-                  <>
-                    <Link to="/my-policies" className={navLinkClass("/my-policies")}>
-                      <Shield size={15} /> My Policies
-                    </Link>
-                    <Link to="/my-claims" className={navLinkClass("/my-claims")}>
-                      <FileSpreadsheet size={15} /> My Claims
-                    </Link>
-                  </>
-                )}
-              </div>
 
-              {/* User Badge */}
-              <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-slate-800">
-                <div className="text-right">
-                  <p className="text-xs font-semibold text-slate-200">{user.name}</p>
-                  <span className={`inline-block px-1.5 py-0.5 text-[10px] font-bold rounded border uppercase tracking-wider ${roleColor[user.role] || "bg-slate-800 text-slate-300"}`}>
-                    {user.role}
-                  </span>
-                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-1.5 rounded-lg hover:bg-white/10 text-blue-100 hover:text-white"
+                  title="Logout"
+                >
+                  <LogOut size={16} />
+                </button>
               </div>
-
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold transition-all"
-                title="Log out of SecureShield"
-              >
-                <LogOut size={14} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
             </>
           ) : (
             <Link
               to="/login"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-500 hover:to-sky-400 text-white font-semibold text-xs shadow-lg shadow-brand-500/20 transition-all glow-btn"
+              className="px-4 py-1.5 rounded-lg bg-white text-[#0f52ba] font-bold text-xs hover:bg-blue-50 transition-colors shadow"
             >
-              <UserCheck size={16} /> Sign In
+              Sign In
             </Link>
           )}
         </div>
